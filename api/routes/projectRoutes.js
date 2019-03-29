@@ -75,7 +75,7 @@ routes.delete('/:id', async (req, res) => {
     if (isProjectDeleted) {
       res.status(200).json(`Project with id ${req.params.id} was deleted`);
     } else {
-      res.status(500).json(`Project with id ${req.params.id} does not exist`);
+      res.status(400).json(`Project with id ${req.params.id} does not exist`);
     }
   } catch (error) {
     res.status(500).json(error.message);
@@ -83,5 +83,24 @@ routes.delete('/:id', async (req, res) => {
 });
 
 // ========== UPDATE ROUTES ========== //
+routes.put('/:id', async (req, res) => {
+  try {
+    const { project_name, project_description, completed } = req.body;
+    if (project_name || project_description || completed) {
+      const isProjectUpdated = await db('projects')
+        .where({ project_id: req.params.id })
+        .update({ project_name, project_description, completed });
+      if (isProjectUpdated) {
+        res.status(200).json(`Project with id ${req.params.id} was updated`);
+      } else {
+        res.status(400).json(`Project with id ${req.params.id} does not exist`);
+      }
+    } else {
+      res.status(400).json(`You need to include project_name || project_description || completed`);
+    }
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
 
 module.exports = routes;
