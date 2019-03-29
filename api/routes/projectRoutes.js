@@ -31,17 +31,6 @@ routes.get('/', async (req, res) => {
   }
 });
 
-// routes.get('/:id', async (req, res) => {
-//   try {
-//     const specificProject = await db('projects')
-//       .leftJoin('actions', { 'actions.project_id': 'projects.project_id' })
-//       .where({ 'projects.project_id': req.params.id });
-//     res.status(200).json(specificProject);
-//   } catch (error) {
-//     res.status(500).json(error.message);
-//   }
-// });
-
 routes.get('/:id', async (req, res) => {
   try {
     const specificProject = await db
@@ -49,15 +38,21 @@ routes.get('/:id', async (req, res) => {
       .from('projects')
       .where({ project_id: req.params.id })
       .first();
+    specificProject.completed = specificProject.completed === 0 ? false : true;
 
     const actionsOfProject = await db
       .select('action_id AS id', 'action_description AS description', 'action_notes AS notes', 'completed')
       .from('actions')
       .where({ project_id: req.params.id });
 
+    const mappedActionsOfProject = actionsOfProject.map(action => ({
+      ...action,
+      completed: action.completed === 0 ? false : true
+    }));
+
     res.status(200).json({
       ...specificProject,
-      actions: actionsOfProject
+      actions: mappedActionsOfProject
     });
   } catch (error) {
     res.status(500).json(error.message);
