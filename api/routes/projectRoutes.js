@@ -31,4 +31,37 @@ routes.get('/', async (req, res) => {
   }
 });
 
+// routes.get('/:id', async (req, res) => {
+//   try {
+//     const specificProject = await db('projects')
+//       .leftJoin('actions', { 'actions.project_id': 'projects.project_id' })
+//       .where({ 'projects.project_id': req.params.id });
+//     res.status(200).json(specificProject);
+//   } catch (error) {
+//     res.status(500).json(error.message);
+//   }
+// });
+
+routes.get('/:id', async (req, res) => {
+  try {
+    const specificProject = await db
+      .select('project_id AS id', 'project_name AS name', 'project_description AS description', 'completed')
+      .from('projects')
+      .where({ project_id: req.params.id })
+      .first();
+
+    const actionsOfProject = await db
+      .select('action_id AS id', 'action_description AS description', 'action_notes AS notes', 'completed')
+      .from('actions')
+      .where({ project_id: req.params.id });
+
+    res.status(200).json({
+      ...specificProject,
+      actions: actionsOfProject
+    });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
 module.exports = routes;
