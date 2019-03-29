@@ -33,26 +33,30 @@ routes.get('/', async (req, res) => {
 
 routes.get('/:id', async (req, res) => {
   try {
-    const specificProject = await db
+    const specificProjectObject = await db
       .select('project_id AS id', 'project_name AS name', 'project_description AS description', 'completed')
       .from('projects')
       .where({ project_id: req.params.id })
       .first();
-    specificProject.completed = specificProject.completed === 0 ? false : true;
 
-    const actionsOfProject = await db
+    const specificProject = {
+      ...specificProjectObject,
+      completed: specificProjectObject.completed === 0 ? false : true
+    };
+
+    const actionsOfProjectArray = await db
       .select('action_id AS id', 'action_description AS description', 'action_notes AS notes', 'completed')
       .from('actions')
       .where({ project_id: req.params.id });
 
-    const mappedActionsOfProject = actionsOfProject.map(action => ({
+    const actionsOfProject = actionsOfProjectArray.map(action => ({
       ...action,
       completed: action.completed === 0 ? false : true
     }));
 
     res.status(200).json({
       ...specificProject,
-      actions: mappedActionsOfProject
+      actions: actionsOfProject
     });
   } catch (error) {
     res.status(500).json(error.message);
