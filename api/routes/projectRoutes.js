@@ -22,7 +22,6 @@ routes.post('/', async (req, res) => {
 });
 
 // ========== GET ROUTES ========== //
-
 routes.get('/', async (req, res) => {
   try {
     const allProjects = await db('projects');
