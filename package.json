@@ -1,0 +1,18 @@
+{
+  "name": "Sprint-Challenge-RDBMS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon"
+  },
+  "repository": "https://github.com/ivanahuckova/Sprint-Challenge-RDBMS.git",
+  "author": "Ivana Huckova <ivana.huckova@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "knex": "^0.16.3",
+    "nodemon": "^1.18.10",
+    "sqlite3": "^4.0.6"
+  }
+}
