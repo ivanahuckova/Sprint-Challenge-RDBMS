@@ -3,7 +3,7 @@
 module.exports = {
   development: {
     client: 'sqlite3',
-    unseNullAsDefault: true,
+    useNullAsDefault: true,
     connection: {
       filename: './dev/challenge.sqlite3'
     },

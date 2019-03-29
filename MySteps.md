@@ -4,4 +4,5 @@
 1. Command `npx knex init`
 1. Create data folder where database, migrations and seeds are going to be storred
 1. In knexfile - we currently need only development, therefore remove other setup. Don't forget to add right path to database file, migrations folder and seeds folder.
-1.
+1. To create table, use command `npx knex migrate:make NAME_OF_TABLE`
+1. In migration file that was created, return create table https://knexjs.org/#Schema-createTable and drop table if exists https://knexjs.org/#Schema-dropTableIfExists
