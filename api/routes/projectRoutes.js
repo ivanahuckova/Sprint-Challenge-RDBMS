@@ -38,29 +38,50 @@ routes.get('/:id', async (req, res) => {
       .from('projects')
       .where({ project_id: req.params.id })
       .first();
+    if (specificProjectObject) {
+      const specificProject = {
+        ...specificProjectObject,
+        completed: specificProjectObject.completed === 0 ? false : true
+      };
 
-    const specificProject = {
-      ...specificProjectObject,
-      completed: specificProjectObject.completed === 0 ? false : true
-    };
+      const actionsOfProjectArray = await db
+        .select('action_id AS id', 'action_description AS description', 'action_notes AS notes', 'completed')
+        .from('actions')
+        .where({ project_id: req.params.id });
 
-    const actionsOfProjectArray = await db
-      .select('action_id AS id', 'action_description AS description', 'action_notes AS notes', 'completed')
-      .from('actions')
-      .where({ project_id: req.params.id });
+      const actionsOfProject = actionsOfProjectArray.map(action => ({
+        ...action,
+        completed: action.completed === 0 ? false : true
+      }));
 
-    const actionsOfProject = actionsOfProjectArray.map(action => ({
-      ...action,
-      completed: action.completed === 0 ? false : true
-    }));
-
-    res.status(200).json({
-      ...specificProject,
-      actions: actionsOfProject
-    });
+      res.status(200).json({
+        ...specificProject,
+        actions: actionsOfProject
+      });
+    } else {
+      res.status(400).json(`Project with id ${req.params.id} does not exist`);
+    }
   } catch (error) {
     res.status(500).json(error.message);
   }
 });
+
+// ========== DELETE ROUTES ========== //
+routes.delete('/:id', async (req, res) => {
+  try {
+    const isProjectDeleted = await db('projects')
+      .where({ project_id: req.params.id })
+      .del();
+    if (isProjectDeleted) {
+      res.status(200).json(`Project with id ${req.params.id} was deleted`);
+    } else {
+      res.status(500).json(`Project with id ${req.params.id} does not exist`);
+    }
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
+// ========== UPDATE ROUTES ========== //
 
 module.exports = routes;

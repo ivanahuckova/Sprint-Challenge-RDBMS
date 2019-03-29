@@ -11,3 +11,4 @@
 1. Add the seeding data to the specific table.
 1. Run seeding either with `npx knex seed:run` or `npx knex seed:run 01-NAME_OF_SEED`.
 1. Go back to routes and connect the database via `const knexConfig = require('../../knexfile.js').development` and `const db = knex(knexConfig);`
+1. Create routes
