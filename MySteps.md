@@ -9,4 +9,5 @@
 1. After all migrations are created, run command `npx knex migrate:latest` to create database and tables in database.
 1. Next step is to create seed files with command `npx knex seed:make 01-NAME_OF_SEED`
 1. Add the seeding data to the specific table.
-1. Run seeding either with `npx knex seed:run` or `npx knex seed:run 01-NAME_OF_SEED`
+1. Run seeding either with `npx knex seed:run` or `npx knex seed:run 01-NAME_OF_SEED`.
+1. Go back to routes and connect the database via `const knexConfig = require('../../knexfile.js').development` and `const db = knex(knexConfig);`
